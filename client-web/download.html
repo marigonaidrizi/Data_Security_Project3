@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Files - Secure Transfer</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script defer src="js/app.js"></script>
+  <script defer src="js/crypto-client.js"></script>
+  <script defer src="js/download.js"></script>
+</head>
+<body data-page="files">
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="index.html">
+        <span class="brand-mark">S</span>
+        <span>Secure Transfer</span>
+      </a>
+      <nav class="top-actions" aria-label="Primary navigation">
+        <a class="nav-pill" href="upload.html"><span class="icon">⇧</span> Upload</a>
+        <a class="nav-pill active" href="download.html"><span class="icon">□</span> Files</a>
+        <a class="nav-pill" href="/dashboard"><span class="icon">◇</span> Admin</a>
+      </nav>
+    </header>
+
+    <aside class="sidebar" aria-label="Application sections">
+      <div class="sidebar-card">
+        <p class="eyebrow">Workspace</p>
+        <a class="side-link" href="index.html"><span>⌂</span> Dashboard</a>
+        <a class="side-link" href="upload.html"><span>⇧</span> Upload</a>
+        <a class="side-link active" href="download.html"><span>□</span> Files / Downloads</a>
+        <a class="side-link" href="/dashboard"><span>◇</span> Admin / Server</a>
+      </div>
+      <div class="sidebar-note">
+        <strong>Verified downloads</strong>
+        <span>Downloads are decrypted locally and saved only after hash and server signature checks pass.</span>
+      </div>
+    </aside>
+
+    <main class="content">
+      <section class="page-hero files-hero">
+        <div>
+          <p class="eyebrow">Files</p>
+          <h1>Browse and download verified transfers.</h1>
+          <p class="hero-copy">Search stored files, request encrypted packages, and decrypt them in the browser.</p>
+        </div>
+        <section class="stat-grid compact-stats">
+          <article class="stat-card">
+            <span class="stat-icon">□</span>
+            <span class="stat-label">Total files</span>
+            <strong id="files-total-count">0</strong>
+            <small>Across storage</small>
+          </article>
+          <article class="stat-card">
+            <span class="stat-icon">◇</span>
+            <span class="stat-label">Verified files</span>
+            <strong id="files-verified-count">0</strong>
+            <small>Integrity verified</small>
+          </article>
+        </section>
+      </section>
+
+      <section class="panel controls-panel">
+        <label class="inline-field">
+          <span>API base URL</span>
+          <input data-api-base type="url" placeholder="http://127.0.0.1:8000">
+        </label>
+        <label class="search-field">
+          <span>Search files</span>
+          <input id="file-search" type="search" placeholder="Search files by name...">
+        </label>
+        <button class="button secondary" id="refresh-files" type="button">Refresh files</button>
+      </section>
+
+      <section class="panel">
+        <div class="panel-heading">
+          <div class="heading-with-icon">
+            <span class="section-icon">□</span>
+            <div>
+              <h2>Transferred files</h2>
+              <p>Verified files stored on the server and available for encrypted download.</p>
+            </div>
+          </div>
+        </div>
+        <div id="file-list" class="file-list">Loading files...</div>
+      </section>
+
+      <section class="status-panel">
+        <div class="panel-heading compact">
+          <div>
+            <p class="eyebrow">Download status</p>
+            <h2 id="status-title">Ready</h2>
+          </div>
+        </div>
+        <pre id="transfer-log">Choose a file to download.</pre>
+      </section>
+    </main>
+  </div>
+</body>
+</html>
