@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Upload - Secure Transfer</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script defer src="js/app.js"></script>
+  <script defer src="js/crypto-client.js"></script>
+  <script defer src="js/upload.js"></script>
+</head>
+<body data-page="upload">
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="index.html">
+        <span class="brand-mark">S</span>
+        <span>Secure Transfer</span>
+      </a>
+      <nav class="top-actions" aria-label="Primary navigation">
+        <a class="nav-pill active" href="upload.html"><span class="icon">⇧</span> Upload</a>
+        <a class="nav-pill" href="download.html"><span class="icon">□</span> Files</a>
+        <a class="nav-pill" href="/dashboard"><span class="icon">◇</span> Admin</a>
+      </nav>
+    </header>
+
+    <aside class="sidebar" aria-label="Application sections">
+      <div class="sidebar-card">
+        <p class="eyebrow">Workspace</p>
+        <a class="side-link" href="index.html"><span>⌂</span> Dashboard</a>
+        <a class="side-link active" href="upload.html"><span>⇧</span> Upload</a>
+        <a class="side-link" href="download.html"><span>□</span> Files / Downloads</a>
+        <a class="side-link" href="/dashboard"><span>◇</span> Admin / Server</a>
+      </div>
+      <div class="sidebar-note">
+        <strong>Upload sequence</strong>
+        <span>Encrypt with AES-GCM, sign SHA-256 hash, wrap AES key with server RSA public key.</span>
+      </div>
+    </aside>
+
+    <main class="content">
+      <section class="page-hero">
+        <div>
+          <p class="eyebrow">Encrypted upload</p>
+          <h1>Send files only after local encryption and signing.</h1>
+          <p class="hero-copy">The server accepts the file only after decrypting, hashing, and verifying the client signature.</p>
+        </div>
+      </section>
+
+      <section class="workflow-grid">
+        <form class="panel upload-card" id="upload-form">
+          <div class="panel-heading compact">
+            <div>
+              <h2>Upload package</h2>
+              <p>Select a file and the client will prepare the secure transfer package.</p>
+            </div>
+          </div>
+          <label>
+            API base URL
+            <input data-api-base type="url" placeholder="http://127.0.0.1:8000">
+          </label>
+          <label class="file-drop">
+            <span class="drop-icon">⇧</span>
+            <strong>Select file</strong>
+            <small>File is encrypted locally before upload.</small>
+            <input id="file-input" type="file" required>
+          </label>
+          <button class="button primary" id="upload-button" type="submit">Encrypt and Upload</button>
+        </form>
+
+        <aside class="panel process-card">
+          <div class="panel-heading compact">
+            <div>
+              <h2>Transfer stages</h2>
+              <p>What happens before the server stores the file.</p>
+            </div>
+          </div>
+          <ol class="steps">
+            <li><span>1</span><strong>AES-GCM encryption</strong><small>Fresh AES-256 key and nonce.</small></li>
+            <li><span>2</span><strong>SHA-256 hash</strong><small>Plaintext digest for integrity.</small></li>
+            <li><span>3</span><strong>RSA-PSS signature</strong><small>Client signs the file hash.</small></li>
+            <li><span>4</span><strong>RSA-OAEP key wrap</strong><small>Server public key protects AES key.</small></li>
+          </ol>
+        </aside>
+      </section>
+
+      <section class="status-panel">
+        <div class="panel-heading compact">
+          <div>
+            <p class="eyebrow">Live status</p>
+            <h2 id="status-title">Ready</h2>
+          </div>
+        </div>
+        <pre id="transfer-log">Waiting for a file.</pre>
+      </section>
+    </main>
+  </div>
+</body>
+</html>
