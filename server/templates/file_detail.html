@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>File Detail - Secure Transfer</title>
+  <link rel="stylesheet" href="/static/server.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="/client/index.html">
+        <span class="brand-mark">S</span>
+        <span>Secure Transfer</span>
+      </a>
+      <nav class="top-actions" aria-label="Primary navigation">
+        <a class="nav-pill" href="/client/upload.html"><span>⇧</span> Upload</a>
+        <a class="nav-pill" href="/client/download.html"><span>□</span> Files</a>
+        <a class="nav-pill active" href="/dashboard"><span>◇</span> Admin</a>
+      </nav>
+    </header>
+
+    <aside class="sidebar" aria-label="Application sections">
+      <div class="sidebar-card">
+        <p class="eyebrow">Workspace</p>
+        <a class="side-link" href="/client/index.html"><span>⌂</span> Dashboard</a>
+        <a class="side-link" href="/client/upload.html"><span>⇧</span> Upload</a>
+        <a class="side-link" href="/client/download.html"><span>□</span> Files / Downloads</a>
+        <a class="side-link active" href="/dashboard"><span>◇</span> Admin / Server</a>
+      </div>
+    </aside>
+
+    <main class="content">
+      <section class="page-hero">
+        <div>
+          <p class="eyebrow">File metadata</p>
+          <h1>{{ file.filename if file else "File not found" }}</h1>
+          <p class="hero-copy">Read-only verification and storage details from the server metadata record.</p>
+        </div>
+      </section>
+
+      {% if file %}
+      <section class="panel detail-grid">
+        <div class="detail-item">
+          <span class="detail-label">File ID</span>
+          <code>{{ file.file_id }}</code>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">Filename</span>
+          <strong>{{ file.filename }}</strong>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">Size</span>
+          <strong>{{ size_label(file.original_size) }}</strong>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">Uploaded</span>
+          <strong>{{ file.uploaded_at }}</strong>
+        </div>
+        <div class="detail-item wide">
+          <span class="detail-label">SHA-256</span>
+          <code>{{ file.sha256 }}</code>
+        </div>
+        <div class="detail-item wide">
+          <span class="detail-label">Client public key fingerprint</span>
+          <code>{{ file.client_public_key_fingerprint }}</code>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">Hash verification</span>
+          <span class="badge {{ '' if file.hash_verified else 'bad' }}">{{ "Verified" if file.hash_verified else "Failed" }}</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">Signature verification</span>
+          <span class="badge {{ '' if file.signature_verified else 'bad' }}">{{ "Verified" if file.signature_verified else "Failed" }}</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">AES-GCM decryption</span>
+          <span class="badge {{ '' if file.aes_decrypt_successful else 'bad' }}">{{ "Successful" if file.aes_decrypt_successful else "Failed" }}</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">Download count</span>
+          <strong>{{ file.download_count }}</strong>
+        </div>
+      </section>
+      {% else %}
+      <section class="panel empty-state">
+        <h2>The requested file does not exist.</h2>
+        <p>Return to Admin to view uploaded files.</p>
+        <a class="button secondary" href="/dashboard">Back to admin</a>
+      </section>
+      {% endif %}
+    </main>
+  </div>
+</body>
+</html>

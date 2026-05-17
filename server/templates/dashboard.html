@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Admin - Secure Transfer</title>
+  <link rel="stylesheet" href="/static/server.css">
+  <script defer src="/static/server.js"></script>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="/client/index.html">
+        <span class="brand-mark">S</span>
+        <span>Secure Transfer</span>
+      </a>
+      <nav class="top-actions" aria-label="Primary navigation">
+        <a class="nav-pill" href="/client/upload.html"><span>⇧</span> Upload</a>
+        <a class="nav-pill" href="/client/download.html"><span>□</span> Files</a>
+        <a class="nav-pill active" href="/dashboard"><span>◇</span> Admin</a>
+      </nav>
+    </header>
+
+    <aside class="sidebar" aria-label="Application sections">
+      <div class="sidebar-card">
+        <p class="eyebrow">Workspace</p>
+        <a class="side-link" href="/client/index.html"><span>⌂</span> Dashboard</a>
+        <a class="side-link" href="/client/upload.html"><span>⇧</span> Upload</a>
+        <a class="side-link" href="/client/download.html"><span>□</span> Files / Downloads</a>
+        <a class="side-link active" href="/dashboard"><span>◇</span> Admin / Server</a>
+      </div>
+      <div class="sidebar-note">
+        <strong>Server monitoring</strong>
+        <span>Review health, protocol state, verification results, and recent transfer activity.</span>
+      </div>
+    </aside>
+
+    <main class="content">
+      <section class="page-hero">
+        <div>
+          <p class="eyebrow">Admin</p>
+          <h1>Monitor server health and transfer activity.</h1>
+          <p class="hero-copy">A read-only server view for stored files, verification status, protocol details, and recent events.</p>
+        </div>
+      </section>
+
+      <section class="stat-grid five">
+        <article class="stat-card">
+          <span class="stat-icon">◇</span>
+          <span class="stat-label">Server status</span>
+          <strong class="status-word">Healthy</strong>
+          <small>All systems operational</small>
+        </article>
+        <article class="stat-card">
+          <span class="stat-icon">□</span>
+          <span class="stat-label">Stored files</span>
+          <strong>{{ health.files_stored }}</strong>
+          <small>Verified server records</small>
+        </article>
+        <article class="stat-card">
+          <span class="stat-icon">✓</span>
+          <span class="stat-label">Verified files</span>
+          <strong>{{ files | selectattr("hash_verified") | list | length }}</strong>
+          <small>Integrity checked</small>
+        </article>
+        <article class="stat-card">
+          <span class="stat-icon">↔</span>
+          <span class="stat-label">API health</span>
+          <strong class="status-word">Running</strong>
+          <small>FastAPI online</small>
+        </article>
+        <article class="stat-card">
+          <span class="stat-icon">↧</span>
+          <span class="stat-label">Downloads</span>
+          <strong>{{ files | sum(attribute="download_count") }}</strong>
+          <small>Across all files</small>
+        </article>
+      </section>
+
+      <section class="admin-grid">
+        <section class="panel">
+          <div class="panel-heading">
+            <div class="heading-with-icon">
+              <span class="section-icon">↺</span>
+              <div>
+                <h2>Recent server events</h2>
+                <p>Upload and download actions recorded by the transfer service.</p>
+              </div>
+            </div>
+            <button class="button secondary" data-refresh type="button">Refresh</button>
+          </div>
+          {% if transfers %}
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Time</th>
+                  <th>Event</th>
+                  <th>File</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for event in transfers %}
+                <tr>
+                  <td>{{ event.timestamp }}</td>
+                  <td>{{ event.type }}</td>
+                  <td>{{ event.filename or "Unknown file" }}</td>
+                  <td><span class="badge {{ 'bad' if event.status != 'success' else '' }}">{{ event.status }}</span></td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+          {% else %}
+          <div class="empty-state">No transfer activity has been recorded yet.</div>
+          {% endif %}
+        </section>
+
+        <aside class="panel security-card">
+          <div class="heading-with-icon">
+            <span class="section-icon">◇</span>
+            <div>
+              <h2>Server security</h2>
+              <p>Public protocol details only.</p>
+            </div>
+          </div>
+          <dl class="security-list">
+            <div>
+              <dt>Protocol</dt>
+              <dd>HTTP API with application-layer hybrid cryptography</dd>
+            </div>
+            <div>
+              <dt>Algorithms</dt>
+              <dd>RSA-OAEP, RSA-PSS, AES-256-GCM, SHA-256</dd>
+            </div>
+            <div>
+              <dt>Public key fingerprint</dt>
+              <dd><code>{{ health.server_public_key_fingerprint }}</code></dd>
+            </div>
+            <div>
+              <dt>Private keys</dt>
+              <dd>Never exposed in API, dashboard, logs, or frontend.</dd>
+            </div>
+          </dl>
+        </aside>
+      </section>
+
+      <section class="panel">
+        <div class="panel-heading">
+          <div class="heading-with-icon">
+            <span class="section-icon">□</span>
+            <div>
+              <h2>Stored files</h2>
+              <p>Server-side metadata for uploaded and verified files.</p>
+            </div>
+          </div>
+          <a class="button secondary" href="/client/download.html">Open files page</a>
+        </div>
+
+        {% if files %}
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Filename</th>
+                <th>Size</th>
+                <th>Uploaded</th>
+                <th>Hash</th>
+                <th>Signature</th>
+                <th>Downloads</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for file in files %}
+              <tr>
+                <td><span class="file-name"><span class="file-icon">□</span>{{ file.filename }}</span></td>
+                <td>{{ size_label(file.original_size) }}</td>
+                <td>{{ file.uploaded_at }}</td>
+                <td><span class="badge {{ '' if file.hash_verified else 'bad' }}">{{ "Verified" if file.hash_verified else "Failed" }}</span></td>
+                <td><span class="badge {{ '' if file.signature_verified else 'bad' }}">{{ "Verified" if file.signature_verified else "Failed" }}</span></td>
+                <td>{{ file.download_count }}</td>
+                <td><a class="button secondary" href="/dashboard/files/{{ file.file_id }}">Details</a></td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        {% else %}
+        <div class="empty-state">No files uploaded yet. Use the Upload page to create a verified transfer.</div>
+        {% endif %}
+      </section>
+    </main>
+  </div>
+</body>
+</html>
