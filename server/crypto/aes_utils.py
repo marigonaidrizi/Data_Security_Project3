@@ -26,3 +26,21 @@ def generate_nonce(length: int = AES_GCM_NONCE_BYTES) -> bytes:
     if length != AES_GCM_NONCE_BYTES:
         raise ValueError("AES-GCM nonce must be 12 bytes for this protocol.")
     return os.urandom(length)
+
+def encrypt_bytes(plaintext: bytes, key: bytes, nonce: bytes | None = None) -> AesGcmPackage:
+    if nonce is None:
+        nonce = generate_nonce()
+    if len(nonce) != AES_GCM_NONCE_BYTES:
+        raise ValueError("AES-GCM nonce must be 12 bytes.")
+    aesgcm = AESGCM(key)
+    ciphertext = aesgcm.encrypt(nonce, plaintext, associated_data=None)
+    return AesGcmPackage(nonce=nonce, ciphertext=ciphertext)
+
+
+def decrypt_bytes(ciphertext: bytes, key: bytes, nonce: bytes) -> bytes:
+    if len(nonce) != AES_GCM_NONCE_BYTES:
+        raise ValueError("AES-GCM nonce must be 12 bytes.")
+    try:
+        return AESGCM(key).decrypt(nonce, ciphertext, associated_data=None)
+    except (InvalidTag, ValueError) as exc:
+        raise ValueError("AES-GCM decryption failed.") from exc
