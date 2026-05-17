@@ -1,0 +1,66 @@
+{
+  "files": [
+    {
+      "file_id": "24b1ccb7-095f-4a49-be32-407a4600d8c9",
+      "filename": "logo.png",
+      "stored_filename": "24b1ccb7-095f-4a49-be32-407a4600d8c9_logo.png",
+      "stored_path": "server/storage/uploads/24b1ccb7-095f-4a49-be32-407a4600d8c9_logo.png",
+      "original_size": 754639,
+      "sha256": "8c41da670cff590fc8f281a3981d1dc23523c152be1bbd130ffc5d0bfdadb75b",
+      "uploaded_at": "2026-05-10T15:57:23.408295Z",
+      "client_public_key_fingerprint": "7b5c381057d7e498cbc213312d86bc03b7a26f477dd1f633903f7cbeb476102c",
+      "hash_verified": true,
+      "signature_verified": true,
+      "aes_decrypt_successful": true,
+      "download_count": 2
+    },
+    {
+      "file_id": "7ec2ff57-6dbe-4831-85ed-7d046915171b",
+      "filename": "images.jpg",
+      "stored_filename": "7ec2ff57-6dbe-4831-85ed-7d046915171b_images.jpg",
+      "stored_path": "server\\storage\\uploads\\7ec2ff57-6dbe-4831-85ed-7d046915171b_images.jpg",
+      "original_size": 9967,
+      "sha256": "af58ab9a2792cdca3e0431ba7f563bef882439a7d3223518fb6a365a3243fdb7",
+      "uploaded_at": "2026-05-16T20:27:15.482895Z",
+      "client_public_key_fingerprint": "98d490700b035a695f2d50b44cbaa242b5348095bd4d76b1eafa7af9fdc55fb3",
+      "hash_verified": true,
+      "signature_verified": true,
+      "aes_decrypt_successful": true,
+      "download_count": 0
+    }
+  ],
+  "transfers": [
+    {
+      "timestamp": "2026-05-10T15:57:23.409509Z",
+      "type": "upload",
+      "status": "success",
+      "filename": "logo.png",
+      "file_id": "24b1ccb7-095f-4a49-be32-407a4600d8c9",
+      "message": ""
+    },
+    {
+      "timestamp": "2026-05-10T16:03:05.582647Z",
+      "type": "download",
+      "status": "success",
+      "filename": "logo.png",
+      "file_id": "24b1ccb7-095f-4a49-be32-407a4600d8c9",
+      "message": ""
+    },
+    {
+      "timestamp": "2026-05-16T20:24:17.960474Z",
+      "type": "download",
+      "status": "success",
+      "filename": "logo.png",
+      "file_id": "24b1ccb7-095f-4a49-be32-407a4600d8c9",
+      "message": ""
+    },
+    {
+      "timestamp": "2026-05-16T20:27:15.542543Z",
+      "type": "upload",
+      "status": "success",
+      "filename": "images.jpg",
+      "file_id": "7ec2ff57-6dbe-4831-85ed-7d046915171b",
+      "message": ""
+    }
+  ]
+}
